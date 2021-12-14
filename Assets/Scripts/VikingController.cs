@@ -52,7 +52,7 @@ public class VikingController : MonoBehaviour
     }
     private void OnCollisionExit(Collision collision)
     {
-
+        isInAir = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -98,7 +98,7 @@ public class VikingController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && !isInAir)
         {
-            rb.AddForce(Vector3.up * JumpingForce * Time.deltaTime);
+            rb.AddForce(Vector3.up * JumpingForce );
             isInAir = true;
         }
 
