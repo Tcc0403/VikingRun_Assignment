@@ -38,6 +38,7 @@ public class VikingController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        Time.timeScale = 1f;
     }
 
     private void OnCollisionEnter(Collision collision)
