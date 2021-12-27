@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class VikingController : MonoBehaviour
 {
+    public GameObject CanvasGO;
     public int MovementMode = 0;
     public bool isInAir = false;
     public Vector3 MovingDirection = Vector3.forward;
@@ -43,6 +44,7 @@ public class VikingController : MonoBehaviour
     {
         if (collision.gameObject.tag == "coin")
         {
+            CanvasGO.GetComponent<ScorePanel>().CoinIncreament();
             Destroy(collision.gameObject);
             return;
         }

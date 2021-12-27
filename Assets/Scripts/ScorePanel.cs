@@ -25,7 +25,7 @@ public class ScorePanel : MonoBehaviour
         TimeText.text= time.ToString();
         CoinText.text = coin.ToString();
     }
-    void CoinIncreament()
+    public void CoinIncreament()
     {
         coin++;
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class TileSpawner : MonoBehaviour
 {
     public GameObject[] TilePrefabs;
-
+    public GameObject CoinSpawnerGo;    
     private Transform playerTransform;
     List<GameObject> tileList;    
     private float spawnZ=0;
@@ -19,7 +19,7 @@ public class TileSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tileList  = new List<GameObject>();
+        tileList  = new List<GameObject>();        
         Collider tileCollider;
         playerTransform = GameObject.FindGameObjectsWithTag("Player")[0].transform;
         tileCollider = TilePrefabs[0].GetComponent<Collider>();
@@ -52,6 +52,7 @@ public class TileSpawner : MonoBehaviour
         tileCollider = go.GetComponent<Collider>();
         spawnZ += tileCollider.bounds.size.z;
         tileList.Add(go);
+        CoinSpawnerGo.GetComponent<CoinSpawner>().SpawnCoin(go.transform.localPosition.x,2.0f, go.transform.localPosition.z);
     }
     
 }
