@@ -5,7 +5,7 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     public GameObject coinPrefab;
-    int maxAmountCoin = 8;
+    int maxAmountCoin = 50;
     List<GameObject> coinList;
     // Start is called before the first frame update
     void Start()
