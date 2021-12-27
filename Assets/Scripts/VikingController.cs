@@ -6,14 +6,17 @@ using UnityEngine;
 
 public class VikingController : MonoBehaviour
 {
+    public int MovementMode = 0;
     public bool isInAir = false;
     public Vector3 MovingDirection = Vector3.forward;
     public float JumpingForce = 50000f;
     bool isMoving = false;
+    bool isTurning = false;
+    float turningAngle = 0f;
     Rigidbody rb;
     Animator animator;
     [SerializeField] float movingSpeed = 10f;
-    [SerializeField] float rotatingSpeed = 180f;
+    [SerializeField] float rotatingSpeed = 360f;
 
 
 
@@ -55,73 +58,99 @@ public class VikingController : MonoBehaviour
         isInAir = true;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Enter Bridge");
-    }
+    
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("update");
-        MovingDirection = transform.forward;
-        isMoving = false;
-        if (Input.GetKey(KeyCode.LeftShift))
+        switch(MovementMode)
         {
-            movingSpeed = 20f;
-            rotatingSpeed = 360f;
-        }
-        else
-        {
-            movingSpeed = 10f;
-            rotatingSpeed = 180f;
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += movingSpeed * Time.deltaTime * MovingDirection;
-            isMoving = true;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position -= movingSpeed * Time.deltaTime * MovingDirection;
-            isMoving = true;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(0, -rotatingSpeed * Time.deltaTime, 0);
-            isMoving = true;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(0, rotatingSpeed * Time.deltaTime, 0);
+            case 0:
+                MovingDirection = transform.forward;               
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    isMoving = true;
 
-            isMoving = true;
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                   
+                }
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    turningAngle += 90f;
+                    isTurning = true;                                                          
+                }
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    turningAngle -= 90f;
+                    isTurning = true;                      
+                }
+                if (Input.GetKeyDown(KeyCode.Space) && !isInAir)
+                {
+                    rb.AddForce(Vector3.up * JumpingForce );
+                    isInAir = true;
+                }
+                if(isTurning)
+                {
+                    if(turningAngle>5)
+                    {
+                        transform.Rotate(0, -rotatingSpeed * Time.deltaTime, 0);
+                        turningAngle -= rotatingSpeed * Time.deltaTime;
+                    }
+                    else if(turningAngle<-5)
+                    {
+                        transform.Rotate(0, rotatingSpeed * Time.deltaTime, 0);
+                        turningAngle += rotatingSpeed * Time.deltaTime;
+                    }
+                    else
+                    {
+                        transform.Rotate(0, -turningAngle, 0);
+                        turningAngle = 0;
+                        isTurning = false;
+                    }
+                }
+                if(isMoving) transform.position += movingSpeed * Time.deltaTime * MovingDirection;
+                
+                break;
+            case 1:
+                MovingDirection = transform.forward;
+                isMoving = false;                
+                if (Input.GetKey(KeyCode.W))
+                {
+                    transform.position += movingSpeed * Time.deltaTime * MovingDirection;
+                    isMoving = true;
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    transform.position -= movingSpeed * Time.deltaTime * MovingDirection;
+                    isMoving = true;
+                }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    transform.Rotate(0, -rotatingSpeed * Time.deltaTime, 0);
+                    isMoving = true;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    transform.Rotate(0, rotatingSpeed * Time.deltaTime, 0);
+
+                    isMoving = true;
+                }
+                if (Input.GetKeyDown(KeyCode.Space) && !isInAir)
+                {
+                    rb.AddForce(Vector3.up * JumpingForce );
+                    isInAir = true;
+                }
+                break;
+            
         }
-        if (Input.GetKeyDown(KeyCode.Space) && !isInAir)
-        {
-            rb.AddForce(Vector3.up * JumpingForce );
-            isInAir = true;
-        }
+        //Debug.Log("update");
+        
 
 
         animator.SetBool("isMoving", isMoving);
         animator.SetBool("isInAir", isInAir);
         updateDirection();
-
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit rayCastHit;
-
-            if (Physics.Raycast(r, out rayCastHit))
-            {
-                GameObject x = rayCastHit.collider.gameObject;
-                Debug.Log(rayCastHit.collider.name);
-                if (!x.transform.IsChildOf(GameObject.Find("landscapes").transform) && !x.transform.IsChildOf(transform))
-                    Destroy(x);
-            }
-        }
 
     }
 }
