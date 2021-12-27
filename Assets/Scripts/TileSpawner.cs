@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TileSpawner : MonoBehaviour
@@ -8,10 +9,12 @@ public class TileSpawner : MonoBehaviour
 
     private Transform playerTransform;
     List<GameObject> tileList;    
-    private float spawnZ;
+    private float spawnZ=0;
+    private float spawnX=0;
     private int totalTilesOnScreen = 8;
 
     private float tileSizeZ;
+    private float tileSizeX;
 
     // Start is called before the first frame update
     void Start()
@@ -45,9 +48,10 @@ public class TileSpawner : MonoBehaviour
         Collider tileCollider;
         go = Instantiate(TilePrefabs[index]) as GameObject;
         go.transform.SetParent(transform);
-        go.transform.position = Vector3.forward * spawnZ;
+        go.transform.position = new Vector3(spawnX, 0, spawnZ);
         tileCollider = go.GetComponent<Collider>();
         spawnZ += tileCollider.bounds.size.z;
         tileList.Add(go);
     }
+    
 }
